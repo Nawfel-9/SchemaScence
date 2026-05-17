@@ -1,3 +1,5 @@
+![SchemaSense banner](./docs/img/banner.svg)
+
 # SchemaSense
 
 SchemaSense is a fully local vision-language system for engineering diagram analysis. It uses a local Qwen3-VL model served by `llama.cpp`, a FastAPI backend, vanilla HTML/CSS/JS, pure Python orchestration, and NetworkX graph reasoning.
@@ -5,6 +7,13 @@ SchemaSense is a fully local vision-language system for engineering diagram anal
 The goal is not just to answer questions about diagrams, but to expose how the answer was produced: detected symbols, graph nodes and edges, timings, cache status, visual fallback decisions, and baseline comparison.
 
 No cloud APIs, LangChain, LangGraph, Streamlit, or React are required.
+
+## Documentation
+
+- [Beginner architecture guide](docs/ARCHITECTURE.md): file-by-file explanation with inputs, outputs, behavior, and flowcharts.
+- [HTML presentation](docs/schemasense_presentation.html): single-file slide deck for the project demo.
+- [PDF report](docs/schemasense.pdf): academic-style project report.
+- [Image assets](docs/img/): README screenshots, logo, and banner.
 
 ## What The App Does
 
@@ -21,6 +30,10 @@ The app has two main tabs:
 
 - **Analyze**: run one diagram/question through the pipeline.
 - **Comparison**: run the full evaluation set comparing SchemaSense and the baseline, with progress and stop controls.
+
+![SchemaSense Analyze workspace](./docs/img/1.png)
+
+The Analyze workspace keeps the selected diagram, upload controls, question input, local runtime status, and pipeline outputs in one screen.
 
 ## Architecture
 
@@ -86,6 +99,12 @@ web/demo/
   styles.css             Demo styling
   app.js                 Frontend logic
 
+docs/
+  ARCHITECTURE.md        Beginner file-by-file architecture guide
+  img/                   README screenshots, logo, and banner
+  schemasense.pdf        Project report
+  schemasense_presentation.html
+
 data/
   diagrams/              Sample diagrams
   questions.json         Evaluation questions
@@ -97,7 +116,7 @@ outputs/
   eval/                  Full evaluation JSON outputs
   graphs/                Rendered graph outputs
   spotting/              Rendered detection outputs
-  figures/               Report/demo figures
+  figures/               Generated figures
 
 tests/                   Unit tests
 eval.py                  Full benchmark runner
@@ -255,6 +274,10 @@ Supported uploads are image files only:
 PNG, JPG, JPEG, WEBP, BMP, TIFF
 ```
 
+![SchemaSense completed answer](./docs/img/2.png)
+
+After an analysis run, the answer card shows the final answer, confidence, timing, detection count, graph size, image-lookup status, and the reasoning note used for the result.
+
 ### Comparison Tab
 
 1. Open the **Comparison** tab.
@@ -270,6 +293,20 @@ outputs/eval/results.json
 outputs/eval/partial.json
 outputs/results_table.md
 ```
+
+![SchemaSense comparison tab](./docs/img/3.png)
+
+The Comparison tab runs the full question set and tracks SchemaSense against the single-shot baseline with progress, average timing, recent rows, and per-type summary once rows are available.
+
+## Visual Assets
+
+| Asset | Purpose |
+|---|---|
+| `docs/img/banner.svg` | README hero banner and project branding. |
+| `docs/img/logo.svg` | Standalone SchemaSense logo for slides, reports, or external pages. |
+| `docs/img/1.png` | Analyze workspace screenshot. |
+| `docs/img/2.png` | Completed answer card screenshot. |
+| `docs/img/3.png` | Comparison tab screenshot. |
 
 ## Running Evaluation From CLI
 
@@ -314,7 +351,7 @@ Before pushing or submitting:
 - Do not include `models/`.
 - Do not include `__pycache__/`.
 - Do not include local cache files unless explicitly needed.
-- Keep sample diagrams and selected report/demo artifacts.
+- Keep sample diagrams and selected documentation artifacts under `docs/`.
 - Keep `outputs/results_table.md` if it reflects the final evaluation.
 
 ## Troubleshooting
