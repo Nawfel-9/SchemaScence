@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SchemaSense Presentation</title>
+  <style>
+    :root {
+      --bg: #f5f3eb;
+      --paper: #fffdf8;
+      --soft: #f6f3ea;
+      --ink: #1f2933;
+      --muted: #667085;
+      --rule: #d8d2c2;
+      --accent: #1f3144;
+      --blue: #2563eb;
+      --green: #1f7a4d;
+      --orange: #c26a21;
+      --red: #b42318;
+      --purple: #6e56cf;
+      --shadow: 0 22px 70px rgba(31, 41, 51, 0.14);
+      --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SF Mono", Consolas, ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 24rem),
+        linear-gradient(180deg, #faf8ef 0%, var(--bg) 62%);
+      font-family: var(--serif);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .deck {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 1.2rem clamp(1rem, 3vw, 2.2rem);
+      gap: 1rem;
+    }
+
+    header, footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-family: var(--sans);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      color: var(--ink);
+    }
+
+    .brand strong {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      letter-spacing: -0.01em;
+    }
+
+    .progress {
+      position: relative;
+      width: min(28rem, 42vw);
+      height: 2px;
+      background: var(--rule);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.28s ease;
+    }
+
+    main {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 0;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(20rem, 1.08fr);
+      gap: clamp(1.2rem, 3vw, 2.7rem);
+      align-items: center;
+      padding: clamp(1.4rem, 3.2vw, 3rem);
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(1rem) scale(0.985);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .slide.single {
+      grid-template-columns: 1fr;
+      place-items: center;
+      text-align: center;
+    }
+
+    .kicker {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.65rem;
+    }
+
+    h1, h2 {
+      margin: 0;
+      color: var(--ink);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    h1 { font-size: clamp(3rem, 8vw, 6.4rem); line-height: 0.95; }
+    h2 { font-size: clamp(2rem, 4.4vw, 4rem); line-height: 1.03; }
+
+    .subtitle {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.9vw, 1.45rem);
+      line-height: 1.45;
+      max-width: 44rem;
+    }
+
+    ul {
+      margin: 1.25rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.72rem;
+      max-width: 41rem;
+    }
+
+    li {
+      position: relative;
+      padding-left: 1.15rem;
+      color: var(--ink);
+      font-size: clamp(1rem, 1.55vw, 1.22rem);
+      line-height: 1.42;
+    }
+
+    li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .note {
+      margin-top: 1.2rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--rule);
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 40rem;
+    }
+
+    .visual {
+      width: 100%;
+      min-height: 24rem;
+      display: grid;
+      place-items: center;
+    }
+
+    svg {
+      width: 100%;
+      max-height: 70vh;
+      overflow: visible;
+    }
+
+    .box { fill: var(--paper); stroke: var(--rule); stroke-width: 2; rx: 8; }
+    .soft { fill: var(--soft); }
+    .ink { fill: var(--ink); }
+    .muted { fill: var(--muted); }
+    .accent { stroke: var(--accent); }
+    .blue { stroke: var(--blue); }
+    .green { stroke: var(--green); }
+    .orange { stroke: var(--orange); }
+    .purple { stroke: var(--purple); }
+    .red { stroke: var(--red); }
+    .label {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      fill: var(--ink);
+    }
+    .small {
+      font-family: var(--sans);
+      font-size: 11px;
+      fill: var(--muted);
+    }
+    .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      fill: var(--muted);
+    }
+
+    .flow-line {
+      stroke: var(--accent);
+      stroke-width: 3;
+      fill: none;
+      marker-end: url(#arrow);
+      stroke-dasharray: 10 10;
+      stroke-dashoffset: 0;
+    }
+
+    .active .flow-line,
+    .active .pulse-line {
+      animation: dashFlow 1.7s linear infinite;
+    }
+
+    .active .delay-1 { animation-delay: 0.12s; }
+    .active .delay-2 { animation-delay: 0.28s; }
+    .active .delay-3 { animation-delay: 0.44s; }
+    .active .delay-4 { animation-delay: 0.6s; }
+    .active .delay-5 { animation-delay: 0.76s; }
+
+    .fade {
+      opacity: 1;
+      transform: none;
+    }
+
+    .active .fade {
+      animation: none;
+    }
+
+    .active .tile-a { animation: none; }
+    .active .tile-b { animation: none; }
+    .active .node-pulse { animation: nodePulse 1.8s ease-in-out infinite; transform-origin: center; }
+    .active .scan { animation: scan 2.4s ease-in-out infinite; }
+    .active .packet { animation: packet 2.6s ease-in-out infinite; }
+    .active .packet-slow { animation: packetSlow 3.2s ease-in-out infinite; }
+    .active .orbit { animation: orbit 6.4s linear infinite; transform-origin: 360px 210px; }
+    .active .bar-grow { animation: barGrow 2.8s ease-in-out infinite; transform-origin: left center; }
+    .active .glow { animation: glow 2.3s ease-in-out infinite; }
+    .active .float-y { animation: none; }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: var(--sans);
+    }
+
+    button {
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 700;
+      padding: 0.45rem 0.7rem;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--accent); }
+
+    .dots {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: var(--rule);
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+
+    .dot.active {
+      width: 1.45rem;
+      background: var(--accent);
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 1.4rem;
+      max-width: 42rem;
+    }
+
+    .metric {
+      padding: 1rem;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      background: var(--soft);
+      text-align: left;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 2rem;
+      line-height: 1;
+      font-family: var(--serif);
+      color: var(--ink);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 0.4rem;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    @keyframes dashFlow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -40; }
+    }
+    @keyframes nodePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.62; transform: scale(1.08); }
+    }
+    @keyframes scan {
+      0%, 100% { transform: translateX(0); opacity: 0.1; }
+      50% { transform: translateX(390px); opacity: 0.32; }
+    }
+    @keyframes packet {
+      0%, 100% { transform: translateX(0); opacity: 0.35; }
+      50% { transform: translateX(112px); opacity: 1; }
+    }
+    @keyframes packetSlow {
+      0%, 100% { transform: translate(0,0); opacity: 0.35; }
+      50% { transform: translate(0,106px); opacity: 1; }
+    }
+    @keyframes orbit {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes barGrow {
+      0%, 100% { transform: scaleX(0.58); opacity: 0.72; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+    @keyframes glow {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .deck { height: auto; min-height: 100vh; }
+      main { min-height: 42rem; }
+      .slide {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+      }
+      .visual { min-height: 18rem; }
+      .metric-row { grid-template-columns: 1fr; }
+      .progress { width: 38vw; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <header>
+      <div class="brand"><strong>SchemaSense</strong><span>local multi-agent diagram reasoning</span></div>
+      <div class="progress" aria-label="Slide progress"><span id="progressBar"></span></div>
+    </header>
+
+    <main id="slides">
+      <section class="slide single active">
+        <div>
+          <div class="kicker">Project Overview</div>
+          <h1>SchemaSense</h1>
+          <p class="subtitle">A fully local multi-agent VLM system for engineering diagram understanding.</p>
+          <div class="metric-row">
+            <div class="metric"><strong>Local</strong><span>llama.cpp + Qwen3-VL</span></div>
+            <div class="metric"><strong>Graph</strong><span>NetworkX evidence</span></div>
+            <div class="metric"><strong>Hybrid</strong><span>visual verifier</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Problem</div>
+          <h2>Engineering diagrams need evidence, not just answers.</h2>
+          <ul>
+            <li>Diagrams mix symbols, labels, lines, and domain conventions.</li>
+            <li>A full-image VLM answer can be correct but hard to audit.</li>
+            <li>SchemaSense exposes intermediate reasoning artifacts.</li>
+          </ul>
+          <p class="note">Design target: keep the system local, understandable, and demo-ready.</p>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 620 360" role="img" aria-label="Diagram evidence problem">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="58" y="62" width="250" height="220" class="box soft"/>
+            <text x="82" y="95" class="label">Engineering Diagram</text>
+            <path d="M90 180 H250 M170 125 V238 M250 180 H282" stroke="#667085" stroke-width="5" fill="none"/>
+            <circle cx="170" cy="180" r="26" fill="#fff" stroke="#1f2933" stroke-width="3"/>
+            <text x="162" y="185" class="label">P</text>
+            <path d="M235 180 l24 -18 v36 z" fill="#fff" stroke="#1f2933" stroke-width="3"/>
+            <rect x="104" y="224" width="84" height="28" fill="#fff" stroke="#d8d2c2" stroke-width="2"/>
+            <text x="116" y="243" class="small">TAG-101</text>
+            <path d="M325 172 C370 172 370 120 416 120" class="flow-line"/>
+            <rect x="416" y="84" width="150" height="78" class="box"/>
+            <text x="450" y="116" class="label">Answer</text>
+            <text x="438" y="140" class="small">but why?</text>
+            <path d="M325 205 C368 205 372 255 416 255" class="flow-line delay-2"/>
+            <rect x="416" y="219" width="150" height="78" class="box soft"/>
+            <text x="443" y="251" class="label">Evidence</text>
+            <text x="431" y="275" class="small">boxes + graph</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Architecture</div>
+          <h2>One local model, multiple logical agents.</h2>
+          <ul>
+            <li>Qwen3-VL runs through one local llama.cpp server.</li>
+            <li>Agents are Python roles with specialized prompts.</li>
+            <li>No cloud APIs, LangChain, LangGraph, Streamlit, or React.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 720 430" role="img" aria-label="Shared VLM server">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <circle cx="360" cy="210" r="88" fill="#f6f3ea" stroke="#1f3144" stroke-width="4"/>
+            <text x="318" y="198" class="label">llama.cpp</text>
+            <text x="313" y="222" class="small">Qwen3-VL server</text>
+            <text x="304" y="244" class="mono">127.0.0.1:8080</text>
+            <g class="fade delay-1">
+              <rect x="76" y="60" width="148" height="64" class="box soft"/><text x="112" y="98" class="label">Cartographer</text>
+              <path d="M224 94 C270 110 286 148 300 170" class="flow-line"/>
+            </g>
+            <g class="fade delay-2">
+              <rect x="500" y="60" width="148" height="64" class="box soft"/><text x="540" y="98" class="label">Spotter</text>
+              <path d="M500 94 C452 112 433 150 420 170" class="flow-line delay-2"/>
+            </g>
+            <g class="fade delay-3">
+              <rect x="76" y="306" width="148" height="64" class="box soft"/><text x="112" y="344" class="label">Connector</text>
+              <path d="M224 338 C270 322 286 278 302 250" class="flow-line delay-3"/>
+            </g>
+            <g class="fade delay-4">
+              <rect x="500" y="306" width="148" height="64" class="box soft"/><text x="540" y="344" class="label">Reasoner</text>
+              <path d="M500 338 C452 322 433 278 418 250" class="flow-line delay-4"/>
+            </g>
+            <g class="fade delay-5">
+              <rect x="286" y="340" width="148" height="58" class="box"/><text x="310" y="374" class="label">Visual Verifier</text>
+              <path d="M360 340 V300" class="flow-line delay-5"/>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Agent Roles</div>
+          <h2>Small roles keep the system inspectable.</h2>
+          <ul>
+            <li>Cartographer manages spatial coverage.</li>
+            <li>Spotter turns pixels into symbol evidence.</li>
+            <li>Connector converts local relationships into graph edges.</li>
+            <li>Reasoner answers from graph context first.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 720 430" role="img" aria-label="Agent role map">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <circle cx="360" cy="210" r="70" fill="#f6f3ea" stroke="#1f3144" stroke-width="4"/>
+            <text x="325" y="202" class="label">Shared</text>
+            <text x="319" y="225" class="small">VLM context</text>
+            <g class="orbit">
+              <circle cx="360" cy="92" r="9" fill="#2563eb"/>
+              <circle cx="478" cy="210" r="9" fill="#1f7a4d"/>
+              <circle cx="360" cy="328" r="9" fill="#c26a21"/>
+              <circle cx="242" cy="210" r="9" fill="#6e56cf"/>
+            </g>
+            <rect x="80" y="64" width="170" height="62" class="box soft"/>
+            <text x="111" y="99" class="label">Cartographer</text>
+            <rect x="470" y="64" width="170" height="62" class="box soft"/>
+            <text x="524" y="99" class="label">Spotter</text>
+            <rect x="80" y="304" width="170" height="62" class="box"/>
+            <text x="125" y="339" class="label">Connector</text>
+            <rect x="470" y="304" width="170" height="62" class="box"/>
+            <text x="523" y="339" class="label">Reasoner</text>
+            <path d="M250 96 C294 112 310 142 320 162" class="flow-line"/>
+            <path d="M470 96 C426 112 410 142 400 162" class="flow-line delay-1"/>
+            <path d="M250 334 C294 318 310 278 322 252" class="flow-line delay-2"/>
+            <path d="M470 334 C426 318 410 278 398 252" class="flow-line delay-3"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Local Deployment</div>
+          <h2>The demo stays on one machine.</h2>
+          <ul>
+            <li>Browser talks to FastAPI.</li>
+            <li>FastAPI calls pure Python orchestration.</li>
+            <li>llama.cpp serves the local Qwen3-VL model.</li>
+            <li>Artifacts are written under organized output folders.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 740 390" role="img" aria-label="Local deployment flow">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="42" y="142" width="120" height="72" class="box soft"/>
+            <text x="72" y="173" class="label">Browser</text>
+            <text x="65" y="196" class="small">HTML CSS JS</text>
+            <rect x="214" y="142" width="120" height="72" class="box"/>
+            <text x="248" y="173" class="label">FastAPI</text>
+            <text x="238" y="196" class="small">local backend</text>
+            <rect x="386" y="142" width="130" height="72" class="box soft"/>
+            <text x="420" y="173" class="label">Python</text>
+            <text x="407" y="196" class="small">orchestrator</text>
+            <rect x="568" y="142" width="126" height="72" class="box"/>
+            <text x="594" y="173" class="label">llama.cpp</text>
+            <text x="594" y="196" class="small">Qwen3-VL</text>
+            <path d="M162 178 H214" class="flow-line"/>
+            <path d="M334 178 H386" class="flow-line delay-1"/>
+            <path d="M516 178 H568" class="flow-line delay-2"/>
+            <circle class="packet" cx="172" cy="178" r="7" fill="#2563eb"/>
+            <circle class="packet delay-1" cx="344" cy="178" r="7" fill="#1f7a4d"/>
+            <circle class="packet delay-2" cx="526" cy="178" r="7" fill="#c26a21"/>
+            <rect x="218" y="278" width="298" height="58" class="box soft"/>
+            <text x="292" y="312" class="label">outputs and cache</text>
+            <path d="M451 214 V278" class="flow-line delay-3"/>
+            <circle class="packet-slow delay-3" cx="451" cy="224" r="7" fill="#6e56cf"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Pipeline</div>
+          <h2>From pixels to an answer with provenance.</h2>
+          <ul>
+            <li>Tile the diagram.</li>
+            <li>Detect symbols and boxes.</li>
+            <li>Build a graph.</li>
+            <li>Answer with graph + visual verification.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 760 360" role="img" aria-label="Overall pipeline">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <g class="fade">
+              <rect x="28" y="125" width="106" height="72" class="box"/><text x="52" y="153" class="label">Input</text><text x="43" y="177" class="small">image + question</text>
+            </g>
+            <g class="fade delay-1">
+              <rect x="160" y="125" width="112" height="72" class="box soft"/><text x="178" y="153" class="label">Cartographer</text><text x="194" y="177" class="small">tiles</text>
+            </g>
+            <g class="fade delay-2">
+              <rect x="298" y="125" width="112" height="72" class="box soft"/><text x="332" y="153" class="label">Spotter</text><text x="321" y="177" class="small">symbols</text>
+            </g>
+            <g class="fade delay-3">
+              <rect x="436" y="125" width="112" height="72" class="box soft"/><text x="459" y="153" class="label">Connector</text><text x="469" y="177" class="small">graph</text>
+            </g>
+            <g class="fade delay-4">
+              <rect x="574" y="125" width="112" height="72" class="box soft"/><text x="603" y="153" class="label">Reasoner</text><text x="596" y="177" class="small">answer</text>
+            </g>
+            <path d="M134 161 H160" class="flow-line"/>
+            <path d="M272 161 H298" class="flow-line delay-1"/>
+            <path d="M410 161 H436" class="flow-line delay-2"/>
+            <path d="M548 161 H574" class="flow-line delay-3"/>
+            <rect x="574" y="246" width="112" height="58" class="box"/><text x="591" y="280" class="label">Verifier</text>
+            <path d="M630 197 V246" class="flow-line delay-4"/>
+            <rect x="298" y="246" width="112" height="58" class="box"/><text x="327" y="280" class="label">Cache</text>
+            <path d="M354 246 V197" class="flow-line delay-5"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Cache + Orchestration</div>
+          <h2>Expensive VLM calls are reused when possible.</h2>
+          <ul>
+            <li>Image-derived artifacts are stable across questions.</li>
+            <li>The orchestrator checks cache before repeating work.</li>
+            <li>Evaluation can reuse the same visual verification call.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 730 390" role="img" aria-label="Cache orchestration loop">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="70" y="92" width="132" height="64" class="box soft"/>
+            <text x="104" y="129" class="label">Request</text>
+            <polygon points="320,78 414,124 320,170 226,124" fill="#f6f3ea" stroke="#d8d2c2" stroke-width="2"/>
+            <text x="293" y="121" class="label">Cache?</text>
+            <rect x="492" y="92" width="142" height="64" class="box"/>
+            <text x="531" y="129" class="label">Return</text>
+            <rect x="250" y="258" width="148" height="66" class="box soft"/>
+            <text x="284" y="287" class="label">Run agents</text>
+            <text x="272" y="309" class="small">spot graph verify</text>
+            <rect x="492" y="258" width="142" height="66" class="box"/>
+            <text x="527" y="287" class="label">Store</text>
+            <text x="519" y="309" class="small">json overlays graph</text>
+            <path d="M202 124 H226" class="flow-line"/>
+            <path d="M414 124 H492" class="flow-line delay-1"/>
+            <path d="M320 170 V258" class="flow-line delay-2"/>
+            <path d="M398 291 H492" class="flow-line delay-3"/>
+            <path d="M563 258 C600 218 600 168 563 156" class="flow-line delay-4"/>
+            <circle class="packet" cx="206" cy="124" r="7" fill="#2563eb"/>
+            <circle class="packet delay-1" cx="424" cy="124" r="7" fill="#1f7a4d"/>
+            <circle class="packet-slow delay-2" cx="320" cy="178" r="7" fill="#c26a21"/>
+            <rect class="glow" x="512" y="106" width="102" height="12" fill="#1f3144" rx="6"/>
+            <rect class="bar-grow" x="512" y="132" width="102" height="10" fill="#2563eb" rx="5"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Cartographer</div>
+          <h2>Tiling preserves small details.</h2>
+          <ul>
+            <li>Large diagrams are split into overlapping tiles.</li>
+            <li>Every detection is projected back to full-image coordinates.</li>
+            <li>Overlays stay aligned with the original image.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 680 390" role="img" aria-label="Cartographer tiling">
+            <rect x="80" y="60" width="380" height="250" class="box"/>
+            <text x="104" y="94" class="label">Full diagram</text>
+            <g class="tile-a">
+              <rect x="112" y="122" width="150" height="110" fill="#2563eb18" stroke="#2563eb" stroke-width="3" rx="5"/>
+              <rect x="228" y="122" width="150" height="110" fill="#1f7a4d18" stroke="#1f7a4d" stroke-width="3" rx="5"/>
+            </g>
+            <g class="tile-b">
+              <rect x="112" y="202" width="150" height="110" fill="#c26a2118" stroke="#c26a21" stroke-width="3" rx="5"/>
+              <rect x="228" y="202" width="150" height="110" fill="#6e56cf18" stroke="#6e56cf" stroke-width="3" rx="5"/>
+            </g>
+            <path d="M470 188 C520 188 520 130 560 130" class="flow-line"/>
+            <rect x="560" y="96" width="96" height="68" class="box soft"/>
+            <text x="578" y="124" class="label">Tile</text><text x="576" y="147" class="small">x,y bounds</text>
+            <path d="M470 220 C520 220 520 278 560 278" class="flow-line delay-2"/>
+            <rect x="560" y="244" width="96" height="68" class="box"/>
+            <text x="574" y="272" class="label">Project</text><text x="577" y="295" class="small">full bbox</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Symbol Spotter</div>
+          <h2>Visual entities become structured detections.</h2>
+          <ul>
+            <li>Qwen3-VL returns symbols, labels, boxes, confidence.</li>
+            <li>Post-processing normalizes and deduplicates boxes.</li>
+            <li>Detections are visual evidence, not hidden state.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 690 390" role="img" aria-label="Symbol Spotter boxes">
+            <rect x="58" y="62" width="430" height="260" class="box"/>
+            <rect class="scan" x="74" y="78" width="70" height="228" fill="#2563eb"/>
+            <path d="M95 190 H430 M190 120 V265 M310 120 V265" stroke="#667085" stroke-width="5" fill="none"/>
+            <circle cx="190" cy="190" r="26" fill="#fff" stroke="#1f2933" stroke-width="3"/>
+            <text x="183" y="196" class="label">P</text>
+            <circle cx="310" cy="190" r="26" fill="#fff" stroke="#1f2933" stroke-width="3"/>
+            <text x="302" y="196" class="label">M</text>
+            <path d="M390 190 l25 -18 v36 z" fill="#fff" stroke="#1f2933" stroke-width="3"/>
+            <path d="M390 190 l-25 -18 v36 z" fill="#fff" stroke="#1f2933" stroke-width="3"/>
+            <rect x="157" y="157" width="66" height="66" fill="none" stroke="#2563eb" stroke-width="4" rx="4"/>
+            <rect x="277" y="157" width="66" height="66" fill="none" stroke="#1f7a4d" stroke-width="4" rx="4"/>
+            <rect x="354" y="154" width="74" height="72" fill="none" stroke="#c26a21" stroke-width="4" rx="4"/>
+            <rect x="520" y="108" width="125" height="62" class="box soft"/>
+            <text x="543" y="136" class="label">JSON</text><text x="540" y="158" class="small">symbol + bbox</text>
+            <rect x="520" y="220" width="125" height="62" class="box"/>
+            <text x="546" y="248" class="label">Overlay</text><text x="538" y="270" class="small">human check</text>
+            <path d="M488 165 H520" class="flow-line delay-2"/>
+            <path d="M488 242 H520" class="flow-line delay-3"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Connector</div>
+          <h2>Detections become a component graph.</h2>
+          <ul>
+            <li>Each symbol is a node.</li>
+            <li>Local crops ask: what connects directly?</li>
+            <li>Edges store coarse connection type.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 720 400" role="img" aria-label="Connector graph">
+            <rect x="58" y="72" width="285" height="230" class="box"/>
+            <path d="M95 188 H305 M200 188 V258" stroke="#667085" stroke-width="5" fill="none"/>
+            <rect x="78" y="156" width="58" height="58" fill="none" stroke="#b42318" stroke-width="4" rx="5"/>
+            <rect x="172" y="156" width="58" height="58" fill="none" stroke="#2563eb" stroke-width="4" rx="5"/>
+            <rect x="276" y="156" width="46" height="58" fill="none" stroke="#2563eb" stroke-width="4" rx="5"/>
+            <rect x="172" y="238" width="58" height="44" fill="none" stroke="#2563eb" stroke-width="4" rx="5"/>
+            <text x="86" y="146" class="small">target</text>
+            <text x="194" y="146" class="small">1</text>
+            <text x="292" y="146" class="small">2</text>
+            <text x="194" y="298" class="small">3</text>
+            <path d="M350 190 H420" class="flow-line"/>
+            <circle cx="485" cy="190" r="25" fill="#fff" stroke="#b42318" stroke-width="4" class="node-pulse"/>
+            <circle cx="570" cy="190" r="25" fill="#fff" stroke="#2563eb" stroke-width="4"/>
+            <circle cx="650" cy="190" r="25" fill="#fff" stroke="#2563eb" stroke-width="4"/>
+            <circle cx="570" cy="275" r="25" fill="#fff" stroke="#2563eb" stroke-width="4"/>
+            <path d="M510 190 H545" stroke="#1f3144" stroke-width="4"/>
+            <path d="M595 190 H625" stroke="#1f3144" stroke-width="4"/>
+            <path d="M570 215 V250" stroke="#1f3144" stroke-width="4"/>
+            <text x="480" y="196" class="label">0</text>
+            <text x="565" y="196" class="label">1</text>
+            <text x="645" y="196" class="label">2</text>
+            <text x="565" y="281" class="label">3</text>
+            <text x="508" y="168" class="small">pipe</text>
+            <text x="601" y="168" class="small">pipe</text>
+            <text x="582" y="242" class="small">line</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Reasoner</div>
+          <h2>Graph-first, then visual verification.</h2>
+          <ul>
+            <li>The graph gives structure and explainability.</li>
+            <li>The verifier protects against sparse or missing graph evidence.</li>
+            <li>The response records answer provenance.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 820 400" role="img" aria-label="Reasoner flow">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="44" y="90" width="140" height="66" class="box"/><text x="78" y="127" class="label">Question</text>
+            <rect x="44" y="235" width="140" height="66" class="box"/><text x="78" y="262" class="label">Graph</text><text x="76" y="283" class="small">nodes + edges</text>
+            <rect x="235" y="160" width="138" height="76" class="box soft"/><text x="269" y="195" class="label">Reasoner</text><text x="260" y="217" class="small">graph-first</text>
+            <path d="M184 123 C215 132 226 165 235 184" class="flow-line"/>
+            <path d="M184 268 C215 260 226 226 235 212" class="flow-line delay-1"/>
+            <path d="M373 198 H430" class="flow-line delay-2"/>
+            <polygon points="480,152 540,198 480,244 420,198" fill="#f6f3ea" stroke="#d8d2c2" stroke-width="2"/>
+            <text x="456" y="193" class="small">enough</text><text x="458" y="210" class="small">evidence?</text>
+            <rect x="580" y="88" width="104" height="60" class="box"/><text x="602" y="123" class="label">Graph</text>
+            <rect x="580" y="248" width="104" height="60" class="box"/><text x="601" y="282" class="label">Visual</text>
+            <rect x="700" y="166" width="110" height="68" class="box soft"/>
+            <text x="755" y="196" text-anchor="middle" class="label">Final</text>
+            <text x="755" y="216" text-anchor="middle" class="label">answer</text>
+            <path d="M520 172 C548 144 556 124 580 118" class="flow-line delay-3"/>
+            <path d="M520 224 C548 252 556 272 580 278" class="flow-line delay-4"/>
+            <path d="M684 118 C720 120 712 180 700 188" class="flow-line delay-5"/>
+            <path d="M684 278 C720 276 712 220 700 212" class="flow-line delay-5"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Demo Workflow</div>
+          <h2>Two modes tell a clean story.</h2>
+          <ul>
+            <li>Analyze: upload one image and inspect the answer.</li>
+            <li>Evidence: show boxes, graph, timings, and provenance.</li>
+            <li>Comparison: run baseline vs SchemaSense end to end.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 720 390" role="img" aria-label="Demo workflow">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="82" y="70" width="556" height="250" class="box"/>
+            <rect x="108" y="104" width="210" height="42" fill="#1f3144" rx="6"/>
+            <text x="168" y="130" style="font:700 13px Inter, sans-serif; fill:#fff">Analyze</text>
+            <rect x="326" y="104" width="210" height="42" fill="#f6f3ea" stroke="#d8d2c2" stroke-width="2" rx="6"/>
+            <text x="384" y="130" class="label">Comparison</text>
+            <rect x="128" y="178" width="142" height="74" class="box soft float-y"/>
+            <text x="162" y="210" class="label">Answer</text>
+            <text x="154" y="232" class="small">final + source</text>
+            <rect x="292" y="178" width="142" height="74" class="box soft float-y delay-1"/>
+            <text x="332" y="210" class="label">Evidence</text>
+            <text x="318" y="232" class="small">boxes + graph</text>
+            <rect x="456" y="178" width="142" height="74" class="box soft float-y delay-2"/>
+            <text x="488" y="210" class="label">Compare</text>
+            <text x="482" y="232" class="small">progress + stop</text>
+            <path d="M270 215 H292" class="flow-line"/>
+            <path d="M434 215 H456" class="flow-line delay-1"/>
+            <circle class="packet" cx="276" cy="215" r="7" fill="#2563eb"/>
+            <circle class="packet delay-1" cx="440" cy="215" r="7" fill="#1f7a4d"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Evaluation Snapshot</div>
+          <h2>Current recorded result: parity with baseline.</h2>
+          <ul>
+            <li>SchemaSense hybrid: 44 / 45.</li>
+            <li>Single-shot baseline: 44 / 45.</li>
+            <li>Only recorded miss: counting.</li>
+          </ul>
+          <p class="note">These values come from <span class="mono">outputs/results_table.md</span>.</p>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 680 400" role="img" aria-label="Evaluation summary">
+            <rect x="80" y="70" width="220" height="250" class="box soft"/>
+            <text x="116" y="116" class="label">SchemaSense</text>
+            <text x="120" y="196" style="font: 700 70px Georgia; fill:#1f2933">44</text>
+            <text x="200" y="196" class="small">/45</text>
+            <rect x="116" y="236" width="148" height="18" fill="#d8d2c2" rx="9"/>
+            <rect x="116" y="236" width="145" height="18" fill="#1f3144" rx="9"/>
+            <text x="135" y="282" class="small">hybrid pipeline</text>
+            <rect x="380" y="70" width="220" height="250" class="box"/>
+            <text x="432" y="116" class="label">Baseline</text>
+            <text x="420" y="196" style="font: 700 70px Georgia; fill:#1f2933">44</text>
+            <text x="500" y="196" class="small">/45</text>
+            <rect x="416" y="236" width="148" height="18" fill="#d8d2c2" rx="9"/>
+            <rect x="416" y="236" width="145" height="18" fill="#1f3144" rx="9"/>
+            <text x="431" y="282" class="small">single-shot VLM</text>
+            <path d="M306 194 H374" class="flow-line"/>
+            <text x="315" y="168" class="label">97.8%</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Limitations</div>
+          <h2>The honest story is still strong.</h2>
+          <ul>
+            <li>Graph extraction can miss small or dense details.</li>
+            <li>Counting remains the hardest recorded category.</li>
+            <li>The hybrid verifier is a practical reliability guard.</li>
+            <li>Future work: better graph validation and symbol schemas.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 720 400" role="img" aria-label="Limitations and mitigation">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="70" y="86" width="170" height="80" class="box"/>
+            <text x="112" y="120" class="label">Risk</text>
+            <text x="104" y="144" class="small">missed boxes</text>
+            <rect x="70" y="234" width="170" height="80" class="box"/>
+            <text x="106" y="268" class="label">Risk</text>
+            <text x="100" y="292" class="small">weak edges</text>
+            <rect x="300" y="160" width="150" height="90" class="box soft"/>
+            <text x="337" y="196" class="label">Hybrid</text>
+            <text x="325" y="220" class="small">visual verifier</text>
+            <rect x="510" y="160" width="150" height="90" class="box soft"/>
+            <text x="548" y="196" class="label">Defense</text>
+            <text x="532" y="220" class="small">show artifacts</text>
+            <path d="M240 126 C274 138 286 172 300 190" class="flow-line"/>
+            <path d="M240 274 C274 262 286 228 300 212" class="flow-line delay-1"/>
+            <path d="M450 205 H510" class="flow-line delay-2"/>
+            <circle class="node-pulse" cx="374" cy="128" r="18" fill="#fff" stroke="#c26a21" stroke-width="4"/>
+            <path d="M374 146 V160" class="flow-line delay-3"/>
+            <rect class="bar-grow" x="535" y="260" width="100" height="12" fill="#1f3144" rx="6"/>
+            <rect class="bar-grow delay-2" x="535" y="285" width="100" height="12" fill="#2563eb" rx="6"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div>
+          <div class="kicker">Why It Matters</div>
+          <h2>Baseline-level answers, with inspectable evidence.</h2>
+          <ul>
+            <li>Baseline gives strong direct answers.</li>
+            <li>SchemaSense adds detections, graph, cache, and provenance.</li>
+            <li>The hybrid verifier prevents graph-only failure cascades.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <svg viewBox="0 0 690 380" role="img" aria-label="Takeaway">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1f3144"/></marker></defs>
+            <rect x="80" y="76" width="180" height="220" class="box"/>
+            <text x="122" y="126" class="label">Baseline</text>
+            <text x="108" y="168" class="small">full image</text>
+            <text x="108" y="194" class="small">fast answer</text>
+            <text x="108" y="220" class="small">less evidence</text>
+            <rect x="430" y="76" width="180" height="220" class="box soft"/>
+            <text x="470" y="126" class="label">SchemaSense</text>
+            <text x="458" y="168" class="small">same local VLM</text>
+            <text x="458" y="194" class="small">graph artifacts</text>
+            <text x="458" y="220" class="small">visual verifier</text>
+            <path d="M265 186 H420" class="flow-line"/>
+            <text x="310" y="156" class="label">adds</text>
+            <circle cx="326" cy="228" r="11" fill="#2563eb"/>
+            <circle cx="364" cy="228" r="11" fill="#1f7a4d"/>
+            <circle cx="402" cy="228" r="11" fill="#c26a21"/>
+            <path d="M337 228 H353 M375 228 H391" stroke="#1f3144" stroke-width="3"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide single">
+        <div>
+          <div class="kicker">Closing</div>
+          <h2>SchemaSense is a local, explainable VLM pipeline.</h2>
+          <ul style="margin-left:auto;margin-right:auto;text-align:left">
+            <li>Local inference with Qwen3-VL and llama.cpp.</li>
+            <li>Explicit pipeline artifacts for defense and debugging.</li>
+            <li>Hybrid final answering for practical robustness.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="controls">
+        <button id="prev" type="button">Prev</button>
+        <button id="next" type="button">Next</button>
+        <span id="count">1 / 16</span>
+      </div>
+      <div class="dots" id="dots" aria-label="Slide dots"></div>
+    </footer>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const dots = document.getElementById("dots");
+    const count = document.getElementById("count");
+    const progress = document.getElementById("progressBar");
+    let current = 0;
+
+    slides.forEach((_, index) => {
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      dot.addEventListener("click", () => show(index));
+      dots.appendChild(dot);
+    });
+
+    function show(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+      Array.from(dots.children).forEach((dot, i) => dot.classList.toggle("active", i === current));
+      count.textContent = `${current + 1} / ${slides.length}`;
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+    }
+
+    document.getElementById("prev").addEventListener("click", () => show(current - 1));
+    document.getElementById("next").addEventListener("click", () => show(current + 1));
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === " ") {
+        event.preventDefault();
+        show(current + 1);
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        show(current - 1);
+      }
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+    });
+
+    show(0);
+  </script>
+</body>
+</html>

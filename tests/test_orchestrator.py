@@ -76,7 +76,10 @@ class OrchestratorTests(unittest.TestCase):
             "used_image_lookup": False,
         }
 
-        with patch("src.baseline.baseline_answer", return_value={"answer": "correct visual answer", "elapsed_seconds": 0.1}):
+        with patch(
+            "src.baseline.baseline_answer",
+            return_value={"answer": "correct visual answer", "confidence": 0.67, "elapsed_seconds": 0.1},
+        ):
             final, visual, decision = orchestrator._hybrid_answer(
                 image_file=Path("diagram.png"),
                 question="What label is shown?",
@@ -89,6 +92,7 @@ class OrchestratorTests(unittest.TestCase):
 
         self.assertEqual(final["answer"], "correct visual answer")
         self.assertEqual(visual["answer"], "correct visual answer")
+        self.assertEqual(visual["confidence"], 0.67)
         self.assertEqual(decision["final_answer_source"], "visual_fallback")
 
 

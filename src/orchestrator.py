@@ -179,7 +179,7 @@ def _hybrid_answer(
     visual_payload = {
         "answer": str(visual.get("answer", "unknown")).strip() or "unknown",
         "reasoning": "Full-image visual fallback from the local VLM baseline.",
-        "confidence": 0.78,
+        "confidence": _visual_confidence(visual, graph_answer, graph_weak),
         "used_image_lookup": True,
         "elapsed_seconds": visual.get("elapsed_seconds", 0),
     }
@@ -266,6 +266,21 @@ def _confidence(answer: dict[str, Any]) -> float:
         return max(0.0, min(1.0, float(answer.get("confidence", 0.0))))
     except (TypeError, ValueError):
         return 0.0
+
+
+def _visual_confidence(visual: dict[str, Any], graph_answer: dict[str, Any], graph_weak: bool) -> float:
+    if "confidence" in visual:
+        return _confidence(visual)
+
+    visual_text = str(visual.get("answer", "")).strip().lower()
+    if not visual_text or visual_text in {"unknown", "none", "n/a"}:
+        return 0.0
+
+    graph_text = str(graph_answer.get("answer", "")).strip().lower()
+    if graph_text and graph_text == visual_text:
+        return round(max(0.65, min(0.9, _confidence(graph_answer))), 2)
+
+    return 0.52 if graph_weak else 0.6
 
 
 def _resolve_path(path: str) -> Path:
