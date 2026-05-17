@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Genji\\\\Desktop\\\\hajji\\\\SchemaScence\" -Recurse -Include \"*.py\")",
+      "Bash(Select-Object FullName)"
+    ]
+  }
+}

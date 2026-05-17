@@ -1,0 +1,12 @@
+openai>=1.40.0
+python-dotenv
+pillow
+networkx
+matplotlib
+pydantic
+tqdm
+requests
+opencv-python
+fastapi
+uvicorn[standard]
+python-multipart

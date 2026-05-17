@@ -1,0 +1,362 @@
+[
+  {
+    "id": "q01",
+    "diagram": "1.png",
+    "question": "How many numbered water sampling locations are shown?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q02",
+    "diagram": "1.png",
+    "question": "Which unit process follows the pressure tank?",
+    "answer": "Oxidizing filter",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q03",
+    "diagram": "1.png",
+    "question": "Which process comes after the IX filter?",
+    "answer": "Disinfection",
+    "type": "connectivity",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q04",
+    "diagram": "2.png",
+    "question": "How many anion exchange unit vessels are shown?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q05",
+    "diagram": "2.png",
+    "question": "What is the final outlet label on the right side?",
+    "answer": "Treated Water",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q06",
+    "diagram": "2.png",
+    "question": "Where does the top backwash line discharge?",
+    "answer": "Residuals Management",
+    "type": "connectivity",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q07",
+    "diagram": "3.png",
+    "question": "How many remote stations are shown?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q08",
+    "diagram": "3.png",
+    "question": "What controller label is inside the left remote station?",
+    "answer": "PLC",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q09",
+    "diagram": "3.png",
+    "question": "What communication method links the control server to the remote stations?",
+    "answer": "Serial based radio communication",
+    "type": "connectivity",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q10",
+    "diagram": "4.png",
+    "question": "How many ladder rungs end at Valve.Control coils?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q11",
+    "diagram": "4.png",
+    "question": "What latch coil letter is on the open-control rung?",
+    "answer": "L",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q12",
+    "diagram": "4.png",
+    "question": "Which contact is parallel with Valve.HmiOpen?",
+    "answer": "Valve.AutoOpen",
+    "type": "connectivity",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q13",
+    "diagram": "5.png",
+    "question": "How many tank nozzles are labeled N1 through N6?",
+    "answer": "6",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q14",
+    "diagram": "5.png",
+    "question": "What pressure action value is written beside the relief symbol?",
+    "answer": "6 barg",
+    "type": "specification",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q15",
+    "diagram": "5.png",
+    "question": "Where does pump P001 send solvent?",
+    "answer": "Unit 3",
+    "type": "connectivity",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q16",
+    "diagram": "6.png",
+    "question": "How many numbered valve callouts are visible?",
+    "answer": "8",
+    "type": "counting",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q17",
+    "diagram": "6.png",
+    "question": "What column is labeled with warm end and cold end?",
+    "answer": "RHX",
+    "type": "identification",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q18",
+    "diagram": "6.png",
+    "question": "What stream leaves the RHX area to the left at the top?",
+    "answer": "Waste N2",
+    "type": "connectivity",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q19",
+    "diagram": "7.png",
+    "question": "How many labeled rectangular blocks are shown?",
+    "answer": "3",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q20",
+    "diagram": "7.png",
+    "question": "Which block receives the setpoint?",
+    "answer": "Controller",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q21",
+    "diagram": "7.png",
+    "question": "What component receives the controller output signal?",
+    "answer": "Actuator",
+    "type": "connectivity",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q22",
+    "diagram": "8.png",
+    "question": "How many parallel flow paths are shown under Typical of 3?",
+    "answer": "3",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q23",
+    "diagram": "8.png",
+    "question": "Which controller is labeled as the master valve controller?",
+    "answer": "MVC",
+    "type": "identification",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q24",
+    "diagram": "8.png",
+    "question": "What instrument tag connects each valve position to the high-level select line?",
+    "answer": "ZT",
+    "type": "connectivity",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q25",
+    "diagram": "9.png",
+    "question": "How many pressure instruments are tagged with circles?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q26",
+    "diagram": "9.png",
+    "question": "What vessel is controlled in this loop?",
+    "answer": "Storage tank",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q27",
+    "diagram": "9.png",
+    "question": "Which instrument sends feedback to the PIC?",
+    "answer": "PT",
+    "type": "connectivity",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q28",
+    "diagram": "10.png",
+    "question": "How many circular DO measurement instruments are mounted at the basin?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q29",
+    "diagram": "10.png",
+    "question": "What controller tag receives the DO setpoint?",
+    "answer": "AIC",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q30",
+    "diagram": "10.png",
+    "question": "What variable does the control valve adjust?",
+    "answer": "Air flow",
+    "type": "connectivity",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q31",
+    "diagram": "11.png",
+    "question": "How many 74LS107D flip-flop blocks are shown?",
+    "answer": "4",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q32",
+    "diagram": "11.png",
+    "question": "What component label is written beside display U1?",
+    "answer": "DCD_HEX",
+    "type": "identification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q33",
+    "diagram": "11.png",
+    "question": "Is the circuit display missing from the schematic?",
+    "answer": "no",
+    "type": "anomaly",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q34",
+    "diagram": "12.png",
+    "question": "How many ESD callouts are visible?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q35",
+    "diagram": "12.png",
+    "question": "What is the fuel gas pressure from plant?",
+    "answer": "2758 kPa",
+    "type": "specification",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q36",
+    "diagram": "12.png",
+    "question": "What tank feeds the diaphragm pump?",
+    "answer": "Corrosion inhibitor tank",
+    "type": "identification",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q37",
+    "diagram": "13.png",
+    "question": "How many product tanks are shown?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q38",
+    "diagram": "13.png",
+    "question": "Which unit receives flow directly from the feed tank line?",
+    "answer": "Furnace",
+    "type": "connectivity",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q39",
+    "diagram": "13.png",
+    "question": "Is the cooling tower label missing from the upper-left unit?",
+    "answer": "no",
+    "type": "anomaly",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q40",
+    "diagram": "14.png",
+    "question": "How many diode labels D1 through D6 are shown?",
+    "answer": "6",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q41",
+    "diagram": "14.png",
+    "question": "What is the lamp voltage label?",
+    "answer": "220V",
+    "type": "specification",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q42",
+    "diagram": "14.png",
+    "question": "Is the schematic title missing from the top of the image?",
+    "answer": "no",
+    "type": "anomaly",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q43",
+    "diagram": "15.png",
+    "question": "How many PG pressure gauge symbols are shown?",
+    "answer": "2",
+    "type": "counting",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q44",
+    "diagram": "15.png",
+    "question": "Which control valve tag appears on the minimum recycle line?",
+    "answer": "FCV",
+    "type": "identification",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q45",
+    "diagram": "15.png",
+    "question": "Is the casing drain missing below the pump casing?",
+    "answer": "no",
+    "type": "anomaly",
+    "difficulty": "easy"
+  }
+]

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SchemaSense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="/web/demo/styles.css" />
+  </head>
+  <body>
+    <div id="topProgress" class="top-progress" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="brand">
+        <h1>SchemaSense</h1>
+        <span class="subtitle">local multi-agent diagram reasoning</span>
+      </div>
+      <div class="status-line" aria-label="Runtime status">
+        <span id="statusModel" class="pill">model …</span>
+        <span class="sep">·</span>
+        <span id="statusServer" class="pill">server …</span>
+        <span class="sep">·</span>
+        <span id="statusCache" class="pill">cache —</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="Controls">
+        <div class="side-section">
+          <h3>Diagram</h3>
+          <div class="upload-row">
+            <label for="diagramUpload">Upload…</label>
+            <input id="diagramUpload" type="file" accept="image/*" />
+            <span id="uploadFilename" class="upload-filename"></span>
+          </div>
+          <div class="field">
+            <span class="field-label">Sample</span>
+            <select id="sampleSelect"></select>
+          </div>
+        </div>
+
+        <div class="side-section">
+          <h3>Options</h3>
+          <label class="toggle-row"><input id="baselineToggle" type="checkbox" /> Compare with single-shot baseline</label>
+        </div>
+
+        <p class="side-note">
+          All inference runs locally through llama.cpp against Qwen3-VL-8B-Instruct (Q8_0). Nothing leaves this machine.
+        </p>
+      </aside>
+
+      <main class="main">
+        <nav class="view-tabs" aria-label="Workspace views">
+          <span id="tabIndicator" class="tab-indicator" aria-hidden="true"></span>
+          <button id="analyzeTab" class="tab-button active" type="button" data-view="analyze">Analyze</button>
+          <button id="compareTab" class="tab-button" type="button" data-view="compare">Comparison</button>
+        </nav>
+
+        <div id="analyzeView" class="tab-view">
+          <section class="paper preview-card">
+            <div class="section-head">
+              <h2 id="diagramTitle">Select a diagram</h2>
+              <span id="inputTypeBadge" class="meta">sample</span>
+            </div>
+            <div class="diagram-frame">
+              <img id="diagramPreview" alt="Selected engineering diagram" />
+            </div>
+          </section>
+
+          <section class="paper question-card">
+            <div class="section-head">
+              <h2>Question</h2>
+              <span class="meta">free text · english</span>
+            </div>
+            <label for="questionInput" class="sr-only">Question</label>
+            <textarea id="questionInput" rows="3"></textarea>
+            <div class="question-actions">
+              <span class="question-hint">Counting, identification, connectivity, anomalies, specifications.</span>
+              <button id="analyzeButton" class="btn btn-primary" type="button">
+                <span class="btn-label">Analyze</span>
+                <span class="arrow">→</span>
+              </button>
+            </div>
+          </section>
+
+          <section id="errorCard" class="notice error hidden" role="alert"></section>
+          <section id="warningsCard" class="notice warn hidden" aria-live="polite"></section>
+
+          <section class="paper card status-strip" aria-live="polite">
+            <div class="status-current">
+              <span class="label">Stage</span>
+              <span id="controlTitle" class="value">Idle — press Analyze to run</span>
+            </div>
+            <span id="statusAside" class="status-aside">elapsed 0.0s · cache —</span>
+          </section>
+
+          <ol id="progressTimeline" class="progress card paper"></ol>
+
+          <section class="paper answer-card">
+            <div class="answer-head">
+              <span class="eyebrow">Answer</span>
+              <span id="answerCorner" class="meta">awaiting</span>
+            </div>
+            <p id="answerText" class="answer-text muted">Run SchemaSense to produce a graph-first answer.</p>
+            <div id="answerMeta" class="answer-meta hidden">
+              <span>Confidence <strong id="metaConfidence">—</strong></span>
+              <span>Total <strong id="metaTime">—</strong></span>
+              <span>Detections <strong id="metaDetections">—</strong></span>
+              <span>Graph <strong id="metaGraph">—</strong></span>
+              <span>Image lookup <strong id="metaLookup">—</strong></span>
+            </div>
+            <p id="reasoningText" class="reasoning hidden"></p>
+          </section>
+
+          <section id="pipeline" class="pipeline hidden" aria-label="Pipeline artifacts">
+            <figure>
+              <figcaption>Spotter — detected symbols</figcaption>
+              <img id="spottingImage" alt="Detected symbols overlay" />
+            </figure>
+            <figure>
+              <figcaption>Connector — connectivity graph</figcaption>
+              <img id="graphImage" alt="Connectivity graph" />
+            </figure>
+          </section>
+
+          <details id="traceDetails" class="expand">
+            <summary>Agent trace and timing</summary>
+            <div class="panel">
+              <dl id="traceDl" class="dl">
+                <dt>Reasoning</dt><dd id="traceReasoning" class="muted">—</dd>
+                <dt>Spotting</dt><dd id="traceSpotting" class="mono">0s</dd>
+                <dt>Graph</dt><dd id="traceGraph" class="mono">0s</dd>
+                <dt>Reasoner</dt><dd id="traceReasoner" class="mono">0s</dd>
+                <dt>Total</dt><dd id="traceTotal" class="mono">0s</dd>
+                <dt>Cache</dt><dd id="traceCache" class="mono">—</dd>
+                <dt>Image lookup</dt><dd id="traceLookup" class="mono">no</dd>
+                <dt>Connector</dt><dd id="traceConnector" class="mono">—</dd>
+              </dl>
+            </div>
+          </details>
+
+          <details id="telemetryDetails" class="expand">
+            <summary>Live telemetry</summary>
+            <div class="panel">
+              <dl id="telemetryDl" class="dl"></dl>
+            </div>
+          </details>
+
+          <details id="baselineDetails" class="expand hidden">
+            <summary>Single-shot baseline comparison</summary>
+            <div class="panel">
+              <div id="baselineTable"></div>
+            </div>
+          </details>
+        </div>
+
+        <div id="compareView" class="tab-view hidden">
+          <section class="paper comparison-card">
+            <div class="section-head">
+              <h2>Full Comparison</h2>
+              <span id="evalStatusBadge" class="meta">idle</span>
+            </div>
+            <div class="comparison-actions">
+              <button id="startEvalButton" class="btn btn-primary" type="button">Run comparison</button>
+              <button id="stopEvalButton" class="btn" type="button" disabled>Stop</button>
+              <span id="evalElapsed" class="status-aside">elapsed 0.0s</span>
+            </div>
+            <div class="eval-meter" aria-label="Evaluation progress">
+              <span id="evalMeterBar"></span>
+            </div>
+            <div class="eval-current">
+              <span class="field-label">Current</span>
+              <strong id="evalCurrentTitle">No comparison running</strong>
+              <p id="evalCurrentQuestion" class="muted">Run the benchmark to compare SchemaSense against the single-shot baseline.</p>
+            </div>
+          </section>
+
+          <section class="paper card eval-scoreboard">
+            <div class="score">
+              <span class="field-label">SchemaSense</span>
+              <strong id="evalSchemaScore">0 / 0</strong>
+              <small id="evalSchemaMeta">0.0% · 0.0s avg</small>
+            </div>
+            <div class="score">
+              <span class="field-label">Baseline</span>
+              <strong id="evalBaselineScore">0 / 0</strong>
+              <small id="evalBaselineMeta">0.0% · 0.0s avg</small>
+            </div>
+            <div class="score">
+              <span class="field-label">Leader</span>
+              <strong id="evalLeader">Pending</strong>
+              <small id="evalProgressText">0 of 0 complete</small>
+            </div>
+          </section>
+
+          <section id="evalSummaryCard" class="paper card hidden">
+            <div class="section-head">
+              <h2>Summary</h2>
+              <span id="evalOutputLink" class="meta">outputs</span>
+            </div>
+            <div id="evalTypeBreakdown" class="type-breakdown"></div>
+          </section>
+
+          <section class="paper card">
+            <div class="section-head">
+              <h2>Recent Questions</h2>
+              <span class="meta">latest rows</span>
+            </div>
+            <div id="evalRows" class="eval-rows muted">No rows yet.</div>
+          </section>
+
+          <section id="evalErrorCard" class="notice error hidden" role="alert"></section>
+        </div>
+      </main>
+    </div>
+
+    <footer>All processing is local. No diagram data leaves your machine.</footer>
+    <script src="/web/demo/app.js"></script>
+  </body>
+</html>
