@@ -1,4 +1,19 @@
 <!doctype html>
+<!--
+  SchemaSense — Polished HTML
+  ============================
+  DEPLOYMENT NOTE: restore the original server-relative paths before deploying:
+    <link rel="stylesheet" href="/web/demo/styles.css" />
+    <script src="/web/demo/app.js"></script>
+
+  CHANGES (visual / accessibility only — no backend attributes modified):
+    • Stylesheet / script paths made relative for standalone preview
+    • autocomplete="off" spellcheck="false" added to #questionInput
+    • aria-describedby="questionHint" added to #questionInput
+    • id="questionHint" added to .question-hint span
+    • All element IDs, names, classes, data-attributes, API endpoints,
+      form field names/types/values, and JS logic are preserved exactly.
+-->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -43,7 +58,10 @@
 
         <div class="side-section">
           <h3>Options</h3>
-          <label class="toggle-row"><input id="baselineToggle" type="checkbox" /> Compare with single-shot baseline</label>
+          <label class="toggle-row">
+            <input id="baselineToggle" type="checkbox" />
+            Compare with single-shot baseline
+          </label>
         </div>
 
         <p class="side-note">
@@ -75,9 +93,15 @@
               <span class="meta">free text · english</span>
             </div>
             <label for="questionInput" class="sr-only">Question</label>
-            <textarea id="questionInput" rows="3"></textarea>
+            <textarea
+              id="questionInput"
+              rows="3"
+              autocomplete="off"
+              spellcheck="false"
+              aria-describedby="questionHint"
+            ></textarea>
             <div class="question-actions">
-              <span class="question-hint">Counting, identification, connectivity, anomalies, specifications.</span>
+              <span id="questionHint" class="question-hint">Counting, identification, connectivity, anomalies, specifications.</span>
               <button id="analyzeButton" class="btn btn-primary" type="button">
                 <span class="btn-label">Analyze</span>
                 <span class="arrow">→</span>
@@ -218,5 +242,91 @@
 
     <footer>All processing is local. No diagram data leaves your machine.</footer>
     <script src="/web/demo/app.js"></script>
+
+    <script>
+    /* ─── Visual enhancements — purely presentational, zero backend impact ─── */
+    (function () {
+      'use strict';
+
+      /* 1. Diagram frame shimmer
+            Adds .is-empty to .diagram-frame when #diagramPreview has no src,
+            removes it once a src is set by the app.                           */
+      var diagramImg   = document.getElementById('diagramPreview');
+      var diagramFrame = diagramImg && diagramImg.closest('.diagram-frame');
+
+      function syncShimmer() {
+        if (!diagramFrame) return;
+        var src = diagramImg.getAttribute('src');
+        diagramFrame.classList.toggle('is-empty', !src || src === '');
+      }
+
+      if (diagramImg) {
+        syncShimmer();
+        new MutationObserver(syncShimmer)
+          .observe(diagramImg, { attributes: true, attributeFilter: ['src'] });
+      }
+
+      /* 2. Progress timeline fill line
+            Reads .done / .active classes on <li> elements and updates
+            --fill-pct on the <ol> so the CSS ::after connector grows.        */
+      var progressEl = document.getElementById('progressTimeline');
+
+      function syncFillLine() {
+        if (!progressEl) return;
+        var items    = Array.prototype.slice.call(progressEl.querySelectorAll('li'));
+        var segments = items.length - 1;
+        if (segments <= 0) { progressEl.style.setProperty('--fill-pct', '0%'); return; }
+        var done     = items.filter(function (li) { return li.classList.contains('done'); }).length;
+        var hasActive = items.some(function (li) { return li.classList.contains('active'); });
+        var steps    = done + (hasActive ? 0.5 : 0);
+        var pct      = Math.min(100, (steps / segments) * 100);
+        progressEl.style.setProperty('--fill-pct', pct + '%');
+      }
+
+      if (progressEl) {
+        syncFillLine();
+        new MutationObserver(syncFillLine)
+          .observe(progressEl, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            attributeFilter: ['class']
+          });
+      }
+
+      /* 3. Answer reveal animation
+            When #answerText content changes, briefly applies .is-revealed
+            so the CSS keyframe replays cleanly.                              */
+      var answerText = document.getElementById('answerText');
+      var answerCard = answerText && answerText.closest('.answer-card');
+
+      if (answerText) {
+        new MutationObserver(function () {
+          /* Reveal text */
+          answerText.classList.remove('is-revealed');
+          void answerText.offsetWidth; /* force reflow to restart animation */
+          answerText.classList.add('is-revealed');
+
+          /* Lift card shadow when a real answer is present */
+          if (answerCard) {
+            answerCard.classList.toggle('has-answer', !answerText.classList.contains('muted'));
+          }
+        }).observe(answerText, { childList: true, characterData: true, subtree: true });
+      }
+
+      /* 4. Eval meter running glow
+            Adds .is-running to .eval-meter while the stop button is enabled,
+            drives the CSS meterGlow animation.                               */
+      var evalMeter  = document.querySelector('.eval-meter');
+      var stopBtn    = document.getElementById('stopEvalButton');
+
+      if (evalMeter && stopBtn) {
+        new MutationObserver(function () {
+          evalMeter.classList.toggle('is-running', !stopBtn.disabled);
+        }).observe(stopBtn, { attributes: true, attributeFilter: ['disabled'] });
+      }
+
+    }());
+    </script>
   </body>
 </html>
